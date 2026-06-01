@@ -3725,7 +3725,11 @@ paths:
     get:
       operationId: EvaluatorGenerationJobs_list
       summary: Returns a list of evaluator generation jobs.
-      description: Returns a list of evaluator generation jobs.
+      description: |-
+        Returns a list of evaluator generation jobs. The List API has up to a few
+        seconds of propagation delay, so a recently created job may not appear
+        immediately; use the Get evaluator generation job API with the job ID to
+        retrieve a specific job without delay.
       parameters:
         - name: Foundry-Features
           in: header
