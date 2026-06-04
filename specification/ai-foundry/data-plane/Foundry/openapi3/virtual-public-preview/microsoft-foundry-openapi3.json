@@ -1397,6 +1397,8 @@
             }
           }
         },
+        "x-ms-description-override": "Creates a new agent or a new version of an existing agent.",
+        "x-ms-summary-override": "Create an agent",
         "x-ms-foundry-meta": {
           "required_previews": [
             "CodeAgents=V1Preview"
@@ -1827,6 +1829,8 @@
             }
           }
         },
+        "x-ms-description-override": "Updates the agent by adding a new version if there are any changes to the agent definition. If no changes, returns the existing agent version.",
+        "x-ms-summary-override": "Update an agent",
         "x-ms-foundry-meta": {
           "required_previews": [
             "CodeAgents=V1Preview"
@@ -3933,6 +3937,8 @@
             }
           }
         },
+        "x-ms-description-override": "Creates a new agent version.",
+        "x-ms-summary-override": "Create an agent version",
         "x-ms-foundry-meta": {
           "required_previews": [
             "CodeAgents=V1Preview"
@@ -19858,6 +19864,8 @@
             }
           }
         },
+        "x-ms-description-override": "Creates a new version of a skill. If the skill does not exist, it will be created.",
+        "x-ms-summary-override": "Create a new version of a skill",
         "x-ms-foundry-meta": {
           "required_previews": [
             "Skills=V1Preview"
