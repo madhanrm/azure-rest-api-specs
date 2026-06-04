@@ -9094,9 +9094,8 @@ paths:
   /openai/v1/chat/completions:
     get:
       operationId: Chat_listChatCompletions
-      summary: |
-        List stored Chat Completions. Only Chat Completions that have been stored
-        with the `store` parameter set to `true` will be returned.
+      summary: List chat completions
+      description: Returns stored chat completions that were created with the `store` parameter enabled.
       parameters:
         - name: model
           in: query
@@ -9284,10 +9283,10 @@ paths:
               "has_more": false
             }
       x-ms-list: true
-      x-ms-ignore-summary: true
     post:
       operationId: Chat_createChatCompletion
-      summary: Create a chat completion. Only Chat Completions that have been stored with the `store` parameter set to `true` will be returned.
+      summary: Create a chat completion
+      description: Creates a model response for the provided chat conversation.
       parameters: []
       responses:
         '200':
@@ -10484,13 +10483,11 @@ paths:
                 },
                 "system_fingerprint": null
               }
-      x-ms-ignore-summary: true
   /openai/v1/chat/completions/{completion_id}:
     delete:
       operationId: Chat_deleteChatCompletion
-      summary: |
-        Delete a stored chat completion. Only Chat Completions that have been
-        created with the `store` parameter set to `true` can be deleted.
+      summary: Delete a chat completion
+      description: Deletes a stored chat completion that was created with the `store` parameter enabled.
       parameters:
         - name: completion_id
           in: path
@@ -10602,12 +10599,10 @@ paths:
               "id": "chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2",
               "deleted": true
             }
-      x-ms-ignore-summary: true
     get:
       operationId: Chat_getChatCompletion
-      summary: |
-        Get a stored chat completion. Only Chat Completions that have been created
-        with the `store` parameter set to `true` will be returned.
+      summary: Get a chat completion
+      description: Retrieves a stored chat completion by its identifier.
       parameters:
         - name: completion_id
           in: path
@@ -10753,13 +10748,10 @@ paths:
               ],
               "response_format": null
             }
-      x-ms-ignore-summary: true
     post:
       operationId: Chat_updateChatCompletion
-      summary: |
-        Modify a stored chat completion. Only Chat Completions that have been
-        created with the `store` parameter set to `true` can be modified. Currently,
-        the only supported modification is to update the `metadata` field.
+      summary: Update a chat completion
+      description: Updates a stored chat completion by modifying its metadata.
       parameters:
         - name: completion_id
           in: path
@@ -10935,14 +10927,11 @@ paths:
               ],
               "response_format": null
             }
-      x-ms-ignore-summary: true
   /openai/v1/chat/completions/{completion_id}/messages:
     get:
       operationId: Chat_getChatCompletionMessages
-      summary: |
-        Get the messages in a stored chat completion. Only Chat Completions that
-        have been created with the `store` parameter set to `true` will be
-        returned.
+      summary: List messages for a chat completion
+      description: Returns the messages for a stored chat completion.
       parameters:
         - name: completion_id
           in: path
@@ -11095,7 +11084,6 @@ paths:
               "has_more": false
             }
       x-ms-list: true
-      x-ms-ignore-summary: true
   /openai/v1/conversations:
     post:
       operationId: createConversation
@@ -15188,7 +15176,7 @@ paths:
           - Toolboxes=V1Preview
     delete:
       operationId: deleteToolbox
-      summary: Delete a toolbox and all its versions
+      summary: Delete a toolbox
       description: Removes the specified toolbox along with all of its versions.
       parameters:
         - name: name

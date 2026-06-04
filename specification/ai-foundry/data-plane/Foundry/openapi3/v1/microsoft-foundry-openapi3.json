@@ -10766,7 +10766,8 @@
     "/openai/v1/chat/completions": {
       "get": {
         "operationId": "Chat_listChatCompletions",
-        "summary": "List stored Chat Completions. Only Chat Completions that have been stored\nwith the `store` parameter set to `true` will be returned.\n",
+        "summary": "List chat completions",
+        "description": "Returns stored chat completions that were created with the `store` parameter enabled.",
         "parameters": [
           {
             "name": "model",
@@ -10876,12 +10877,12 @@
             "response": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"object\": \"chat.completion\",\n      \"id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2\",\n      \"model\": \"gpt-5.4\",\n      \"created\": 1738960610,\n      \"request_id\": \"req_ded8ab984ec4bf840f37566c1011c417\",\n      \"tool_choice\": null,\n      \"usage\": {\n        \"total_tokens\": 31,\n        \"completion_tokens\": 18,\n        \"prompt_tokens\": 13\n      },\n      \"seed\": 4944116822809979520,\n      \"top_p\": 1.0,\n      \"temperature\": 1.0,\n      \"presence_penalty\": 0.0,\n      \"frequency_penalty\": 0.0,\n      \"system_fingerprint\": \"fp_50cad350e4\",\n      \"input_user\": null,\n      \"service_tier\": \"default\",\n      \"tools\": null,\n      \"metadata\": {},\n      \"choices\": [\n        {\n          \"index\": 0,\n          \"message\": {\n            \"content\": \"Mind of circuits hum,\nLearning patterns in silence—\nFuture's quiet spark.\",\n            \"role\": \"assistant\",\n            \"tool_calls\": null,\n            \"function_call\": null\n          },\n          \"finish_reason\": \"stop\",\n          \"logprobs\": null\n        }\n      ],\n      \"response_format\": null\n    }\n  ],\n  \"first_id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2\",\n  \"last_id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2\",\n  \"has_more\": false\n}\n"
           }
         },
-        "x-ms-list": true,
-        "x-ms-ignore-summary": true
+        "x-ms-list": true
       },
       "post": {
         "operationId": "Chat_createChatCompletion",
-        "summary": "Create a chat completion. Only Chat Completions that have been stored with the `store` parameter set to `true` will be returned.",
+        "summary": "Create a chat completion",
+        "description": "Creates a model response for the provided chat conversation.",
         "parameters": [],
         "responses": {
           "200": {
@@ -11035,14 +11036,14 @@
               "response": "{\n  \"id\": \"chatcmpl-123\",\n  \"object\": \"chat.completion\",\n  \"created\": 1702685778,\n  \"model\": \"gpt-4o-mini\",\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"role\": \"assistant\",\n        \"content\": \"Hello! How can I assist you today?\"\n      },\n      \"logprobs\": {\n        \"content\": [\n          {\n            \"token\": \"Hello\",\n            \"logprob\": -0.31725305,\n            \"bytes\": [72, 101, 108, 108, 111],\n            \"top_logprobs\": [\n              {\n                \"token\": \"Hello\",\n                \"logprob\": -0.31725305,\n                \"bytes\": [72, 101, 108, 108, 111]\n              },\n              {\n                \"token\": \"Hi\",\n                \"logprob\": -1.3190403,\n                \"bytes\": [72, 105]\n              }\n            ]\n          },\n          {\n            \"token\": \"!\",\n            \"logprob\": -0.02380986,\n            \"bytes\": [\n              33\n            ],\n            \"top_logprobs\": [\n              {\n                \"token\": \"!\",\n                \"logprob\": -0.02380986,\n                \"bytes\": [33]\n              },\n              {\n                \"token\": \" there\",\n                \"logprob\": -3.787621,\n                \"bytes\": [32, 116, 104, 101, 114, 101]\n              }\n            ]\n          },\n          {\n            \"token\": \" How\",\n            \"logprob\": -0.000054669687,\n            \"bytes\": [32, 72, 111, 119],\n            \"top_logprobs\": [\n              {\n                \"token\": \" How\",\n                \"logprob\": -0.000054669687,\n                \"bytes\": [32, 72, 111, 119]\n              },\n              {\n                \"token\": \"<|end|>\",\n                \"logprob\": -10.953937,\n                \"bytes\": null\n              }\n            ]\n          },\n          {\n            \"token\": \" can\",\n            \"logprob\": -0.015801601,\n            \"bytes\": [32, 99, 97, 110],\n            \"top_logprobs\": [\n              {\n                \"token\": \" can\",\n                \"logprob\": -0.015801601,\n                \"bytes\": [32, 99, 97, 110]\n              },\n              {\n                \"token\": \" may\",\n                \"logprob\": -4.161023,\n                \"bytes\": [32, 109, 97, 121]\n              }\n            ]\n          },\n          {\n            \"token\": \" I\",\n            \"logprob\": -3.7697225e-6,\n            \"bytes\": [\n              32,\n              73\n            ],\n            \"top_logprobs\": [\n              {\n                \"token\": \" I\",\n                \"logprob\": -3.7697225e-6,\n                \"bytes\": [32, 73]\n              },\n              {\n                \"token\": \" assist\",\n                \"logprob\": -13.596657,\n                \"bytes\": [32, 97, 115, 115, 105, 115, 116]\n              }\n            ]\n          },\n          {\n            \"token\": \" assist\",\n            \"logprob\": -0.04571125,\n            \"bytes\": [32, 97, 115, 115, 105, 115, 116],\n            \"top_logprobs\": [\n              {\n                \"token\": \" assist\",\n                \"logprob\": -0.04571125,\n                \"bytes\": [32, 97, 115, 115, 105, 115, 116]\n              },\n              {\n                \"token\": \" help\",\n                \"logprob\": -3.1089056,\n                \"bytes\": [32, 104, 101, 108, 112]\n              }\n            ]\n          },\n          {\n            \"token\": \" you\",\n            \"logprob\": -5.4385737e-6,\n            \"bytes\": [32, 121, 111, 117],\n            \"top_logprobs\": [\n              {\n                \"token\": \" you\",\n                \"logprob\": -5.4385737e-6,\n                \"bytes\": [32, 121, 111, 117]\n              },\n              {\n                \"token\": \" today\",\n                \"logprob\": -12.807695,\n                \"bytes\": [32, 116, 111, 100, 97, 121]\n              }\n            ]\n          },\n          {\n            \"token\": \" today\",\n            \"logprob\": -0.0040071653,\n            \"bytes\": [32, 116, 111, 100, 97, 121],\n            \"top_logprobs\": [\n              {\n                \"token\": \" today\",\n                \"logprob\": -0.0040071653,\n                \"bytes\": [32, 116, 111, 100, 97, 121]\n              },\n              {\n                \"token\": \"?\",\n                \"logprob\": -5.5247097,\n                \"bytes\": [63]\n              }\n            ]\n          },\n          {\n            \"token\": \"?\",\n            \"logprob\": -0.0008108172,\n            \"bytes\": [63],\n            \"top_logprobs\": [\n              {\n                \"token\": \"?\",\n                \"logprob\": -0.0008108172,\n                \"bytes\": [63]\n              },\n              {\n                \"token\": \"?\n\",\n                \"logprob\": -7.184561,\n                \"bytes\": [63, 10]\n              }\n            ]\n          }\n        ]\n      },\n      \"finish_reason\": \"stop\"\n    }\n  ],\n  \"usage\": {\n    \"prompt_tokens\": 9,\n    \"completion_tokens\": 9,\n    \"total_tokens\": 18,\n    \"completion_tokens_details\": {\n      \"reasoning_tokens\": 0,\n      \"accepted_prediction_tokens\": 0,\n      \"rejected_prediction_tokens\": 0\n    }\n  },\n  \"system_fingerprint\": null\n}\n"
             }
           ]
-        },
-        "x-ms-ignore-summary": true
+        }
       }
     },
     "/openai/v1/chat/completions/{completion_id}": {
       "delete": {
         "operationId": "Chat_deleteChatCompletion",
-        "summary": "Delete a stored chat completion. Only Chat Completions that have been\ncreated with the `store` parameter set to `true` can be deleted.\n",
+        "summary": "Delete a chat completion",
+        "description": "Deletes a stored chat completion that was created with the `store` parameter enabled.",
         "parameters": [
           {
             "name": "completion_id",
@@ -11103,12 +11104,12 @@
             },
             "response": "{\n  \"object\": \"chat.completion.deleted\",\n  \"id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2\",\n  \"deleted\": true\n}\n"
           }
-        },
-        "x-ms-ignore-summary": true
+        }
       },
       "get": {
         "operationId": "Chat_getChatCompletion",
-        "summary": "Get a stored chat completion. Only Chat Completions that have been created\nwith the `store` parameter set to `true` will be returned.\n",
+        "summary": "Get a chat completion",
+        "description": "Retrieves a stored chat completion by its identifier.",
         "parameters": [
           {
             "name": "completion_id",
@@ -11169,12 +11170,12 @@
             },
             "response": "{\n  \"object\": \"chat.completion\",\n  \"id\": \"chatcmpl-abc123\",\n  \"model\": \"gpt-4o-2024-08-06\",\n  \"created\": 1738960610,\n  \"request_id\": \"req_ded8ab984ec4bf840f37566c1011c417\",\n  \"tool_choice\": null,\n  \"usage\": {\n    \"total_tokens\": 31,\n    \"completion_tokens\": 18,\n    \"prompt_tokens\": 13\n  },\n  \"seed\": 4944116822809979520,\n  \"top_p\": 1.0,\n  \"temperature\": 1.0,\n  \"presence_penalty\": 0.0,\n  \"frequency_penalty\": 0.0,\n  \"system_fingerprint\": \"fp_50cad350e4\",\n  \"input_user\": null,\n  \"service_tier\": \"default\",\n  \"tools\": null,\n  \"metadata\": {},\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"content\": \"Mind of circuits hum,\nLearning patterns in silence—\nFuture's quiet spark.\",\n        \"role\": \"assistant\",\n        \"tool_calls\": null,\n        \"function_call\": null\n      },\n      \"finish_reason\": \"stop\",\n      \"logprobs\": null\n    }\n  ],\n  \"response_format\": null\n}\n"
           }
-        },
-        "x-ms-ignore-summary": true
+        }
       },
       "post": {
         "operationId": "Chat_updateChatCompletion",
-        "summary": "Modify a stored chat completion. Only Chat Completions that have been\ncreated with the `store` parameter set to `true` can be modified. Currently,\nthe only supported modification is to update the `metadata` field.\n",
+        "summary": "Update a chat completion",
+        "description": "Updates a stored chat completion by modifying its metadata.",
         "parameters": [
           {
             "name": "completion_id",
@@ -11245,14 +11246,14 @@
             },
             "response": "{\n  \"object\": \"chat.completion\",\n  \"id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2\",\n  \"model\": \"gpt-4o-2024-08-06\",\n  \"created\": 1738960610,\n  \"request_id\": \"req_ded8ab984ec4bf840f37566c1011c417\",\n  \"tool_choice\": null,\n  \"usage\": {\n    \"total_tokens\": 31,\n    \"completion_tokens\": 18,\n    \"prompt_tokens\": 13\n  },\n  \"seed\": 4944116822809979520,\n  \"top_p\": 1.0,\n  \"temperature\": 1.0,\n  \"presence_penalty\": 0.0,\n  \"frequency_penalty\": 0.0,\n  \"system_fingerprint\": \"fp_50cad350e4\",\n  \"input_user\": null,\n  \"service_tier\": \"default\",\n  \"tools\": null,\n  \"metadata\": {\n    \"foo\": \"bar\"\n  },\n  \"choices\": [\n    {\n      \"index\": 0,\n      \"message\": {\n        \"content\": \"Mind of circuits hum,\nLearning patterns in silence—\nFuture's quiet spark.\",\n        \"role\": \"assistant\",\n        \"tool_calls\": null,\n        \"function_call\": null\n      },\n      \"finish_reason\": \"stop\",\n      \"logprobs\": null\n    }\n  ],\n  \"response_format\": null\n}\n"
           }
-        },
-        "x-ms-ignore-summary": true
+        }
       }
     },
     "/openai/v1/chat/completions/{completion_id}/messages": {
       "get": {
         "operationId": "Chat_getChatCompletionMessages",
-        "summary": "Get the messages in a stored chat completion. Only Chat Completions that\nhave been created with the `store` parameter set to `true` will be\nreturned.\n",
+        "summary": "List messages for a chat completion",
+        "description": "Returns the messages for a stored chat completion.",
         "parameters": [
           {
             "name": "completion_id",
@@ -11345,8 +11346,7 @@
             "response": "{\n  \"object\": \"list\",\n  \"data\": [\n    {\n      \"id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2-0\",\n      \"role\": \"user\",\n      \"content\": \"write a haiku about ai\",\n      \"name\": null,\n      \"content_parts\": null\n    }\n  ],\n  \"first_id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2-0\",\n  \"last_id\": \"chatcmpl-AyPNinnUqUDYo9SAdA52NobMflmj2-0\",\n  \"has_more\": false\n}\n"
           }
         },
-        "x-ms-list": true,
-        "x-ms-ignore-summary": true
+        "x-ms-list": true
       }
     },
     "/openai/v1/conversations": {
@@ -17612,7 +17612,7 @@
       },
       "delete": {
         "operationId": "deleteToolbox",
-        "summary": "Delete a toolbox and all its versions",
+        "summary": "Delete a toolbox",
         "description": "Removes the specified toolbox along with all of its versions.",
         "parameters": [
           {
