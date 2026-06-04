@@ -17541,6 +17541,11 @@
                 "schema": {
                   "$ref": "#/components/schemas/OpenAI.Response"
                 }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAI.CreateResponseStreamingResponse"
+                }
               }
             }
           },

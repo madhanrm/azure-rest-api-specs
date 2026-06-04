@@ -11171,6 +11171,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OpenAI.Response'
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/OpenAI.CreateResponseStreamingResponse'
         4XX:
           description: Client error
           content:
