@@ -1018,6 +1018,17 @@ The list below restates the field meanings for in-file readability:
    - `degraded` on full-review PRs where graph derivation was attempted and failed even after retry (see Step 3.5 "Failure recovery"); the Critic records `Graph integrity = N/A` and the Step 6 report MUST carry the failure banner.
 10. **Current iteration number** (`1` through `3`). The Critic's output header MUST echo this value; the Reviewer increments it on each re-invocation.
 
+**Pre-dispatch self-check (mechanical YAML validation, MANDATORY).** Before calling `runSubagent` for the Critic, validate the input block locally. The Critic's `missing-inputs` FAIL is the safety net; this check is the primary defense and catches the most frequent dispatch failure mode -- silently-rejected malformed YAML that the host returns as an empty response. Confirm all six points; if any fails, fix the input block before dispatching:
+
+1. Exactly one fenced YAML block in the prompt, starting with the literal comment `# critic-inputs/v1`. No additional or alternative input blocks.
+2. **Keys are snake_case** matching the protocol schema exactly: `pr_url`, `session_sha`, `files_reviewed`, `previous_version`, `prior_fail_sets`, `considered_and_declined`, `graphs_produced`, `iteration`. Kebab-case (`pr-url`, `session-sha`, ...) and capitalization variants (`Pr_Url`, `SESSION_SHA`) are **not** equivalent and will FAIL `missing-inputs`.
+3. `session_sha` is the **full 40-character** SHA, not the abbreviated 7-character form.
+4. `previous_version` is either the nested `{ base_sha_or_ref, path }` object or the literal string `None - new service`. A flattened form (e.g., `previous_version_source: ...`) is **not** the schema.
+5. `prior_fail_sets` and `considered_and_declined` are explicit empty containers (`[]` or `none`) on iteration 1; omission FAILs per the protocol's [iteration-1 empty-list rule](./protocols/arm-api-review-critic.protocol.md#inputs-the-reviewer-passes-to-the-critic).
+6. The `## Step 6 findings report` and `## Step 5.5 reconciliation plan` H2 headings are present and **immediately follow** the YAML block (the plan heading carries either the verbatim plan or the literal sentinel `reconciliation skipped`).
+
+This self-check is a Reviewer-side gate, not a Critic substitute -- the Critic still runs `missing-inputs` validation on receipt. The check exists because a malformed dispatch can return as a silent (zero-content) response, which is indistinguishable on the Reviewer side from a Critic that passed everything; pre-validating eliminates that ambiguity. If the dispatch nevertheless returns empty, treat it as a Rung-1 failure per the fallback ladder below.
+
 If at any point during the iteration loop a tool call surfaces that the PR head has moved past the session SHA, abort the loop immediately, report the SHA change to the human, and ask whether to restart at the new head or stop. Do **not** silently re-pin.
 
 **How to apply the critic's verdict:**
@@ -1076,7 +1087,15 @@ If at any point during the iteration loop a tool call surfaces that the PR head 
 - **Rung 1 fails -> entering Rung 2** -> you **must** emit the session-handoff prompt below verbatim before doing anything else. This is not optional.
 - **Rung 3 reached** -> render the UNAVAILABLE exception banner at the top of the Step 6 report.
 
-1. **Rung 1 -- Preferred: invoke the critic as a subagent.** Use the host's subagent dispatch (the `agent` tool with agent name `ARM API Review Critic`) to invoke [`.github/agents/arm-api-review-critic.agent.md`](./arm-api-review-critic.agent.md). Track `Critic mode: subagent` internally. If the call returns an error (tool-not-found, dispatch-failed, agent-not-found), go to Rung 2 immediately. Do **not** retry silently and do **not** fall through to Rung 3.
+1. **Rung 1 -- Preferred: invoke the critic as a subagent.** Use the host's subagent dispatch (the `agent` tool with agent name `ARM API Review Critic`) to invoke [`.github/agents/arm-api-review-critic.agent.md`](./arm-api-review-critic.agent.md). Track `Critic mode: subagent` internally.
+
+   Rung 1 has **failed** if the dispatch returns **any** of:
+   - (a) A tool-error response (e.g., `tool-not-found`, `dispatch-failed`, `agent-not-found`).
+   - (b) An **empty / zero-content response** (the host returns `Agent completed with no output`, an empty string, or an equivalent silent return). Per the protocol's [Non-empty response invariant](./protocols/arm-api-review-critic.protocol.md#non-empty-response-invariant), the Critic **never** returns empty -- a silent dispatch return is a host-side failure, **not** a passing verdict. The most common upstream cause is a malformed input block that the pre-dispatch self-check above should have caught.
+   - (c) A response whose **literal first line is not** a `<!-- critic-verdict: ... -->` marker matching the [Critic-verdict marker schema](./protocols/arm-api-review-critic.protocol.md#critic-verdict-marker-per-critic-response). A response that begins with prose, `### Verdict`, an apology, or anything else means the dispatch did not actually invoke the Critic agent and the content cannot be trusted.
+
+   On any Rung-1 failure, emit a **single chat-visible diagnostic line** naming the specific failure shape and the most likely cause (for example, ``Rung-1 dispatch returned empty -- likely cause: input YAML failed Critic-side validation. Verify the `# critic-inputs/v1` block uses snake_case keys and explicit `[]` for `prior_fail_sets` / `considered_and_declined` on iteration 1, then advance to Rung 2.``), then go to Rung 2 immediately. Do **not** retry silently, do **not** misclassify the failure as "tool not available" when the cause is actually a malformed input block, and do **not** fall through to Rung 3.
+
 2. **Rung 2 -- Mandatory if Rung 1 fails: session-handoff.** This rung is **not optional** and cannot be skipped by your own judgement. You must stop and emit, verbatim:
 
    > "Subagent invocation is not available in this session. To run the critic, please open a new chat with the `ARM API Review Critic` agent selected and paste in the Step 6 report, head SHA, file list, and previous-version source (path plus base SHA/ref, or `None - new service`). When you reply, paste the Critic's output **verbatim including the header fields (`PR:`, `Head SHA:`, `Base SHA/Ref:` when present, `Iteration:`), the `### Verdict` table, and the `### Per-finding annotations` table** - I parse those sections programmatically; free-form approval ("looks fine") is not sufficient. Reply 'skip critic' to bypass independent verification and accept reviewer self-check only (not recommended)."
@@ -1097,7 +1116,7 @@ If at any point during the iteration loop a tool call surfaces that the PR head 
 
 3. **Rung 3 -- Last resort: disclose and stop. Only reachable via explicit human refusal in Rung 2.** If, and only if, the human explicitly opted out of the handoff in Rung 2, do **not** post anything. Track `Critic mode: unavailable` and `Next-step recommendation: MANUAL DECISION REQUIRED` internally, and render the UNAVAILABLE exception banner from the Step 6 template **in both required locations: at the top of the report AND in the Summary section** (the two `[!CAUTION]` blocks shown in the Step 6 template are both mandatory -- per-finding annotations stay omitted on this path). The banner **must** state that the human opted out; do not use this branch silently.
 
-If the critic itself errors mid-run (returns malformed output, times out, fails to fetch a file), report the failure verbatim to the human and ask whether to retry, switch to session-handoff, or stop. "Self-critique fallback" is **not** an option on this menu.
+If the critic itself errors **mid-run** -- i.e., the dispatch returned content but that content is unusable: the `### Verdict` table is malformed, the verdict marker disagrees with the table body, every cited file came back with `FAIL: file-fetch-failed`, the response is truncated, the Critic itself timed out, etc. -- report the failure verbatim to the human and ask whether to retry, switch to session-handoff, or stop. "Self-critique fallback" is **not** an option on this menu. **Distinguish this from a Rung-1 failure** (above): Rung 1 covers the no-output-at-all case (tool error, empty return, missing first-line marker) and advances to Rung 2 automatically with a diagnostic; the mid-run case covers the some-output-but-unusable case and routes through the human-decision menu above.
 
 #### Canonical output templates for protocol-only responses
 

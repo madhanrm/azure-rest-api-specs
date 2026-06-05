@@ -274,6 +274,30 @@ Reviewer treats the response as a session-handoff validation failure
 Critic output programmatically auditable without depending on
 markdown-table parsing alone.
 
+#### Non-empty response invariant
+
+The Critic MUST emit a **non-empty** response on every dispatch return and
+every session-handoff paste. The literal first line is always the
+`<!-- critic-verdict: ... -->` marker defined above, **even on early-abort
+paths**:
+
+| Abort condition           | Verdict marker (`finding=`) | Required body                                                                          |
+| ------------------------- | --------------------------- | -------------------------------------------------------------------------------------- |
+| `missing-inputs`          | `fail`                      | `### Findings that must be corrected` section enumerating missing or malformed inputs. |
+| `session-sha-unreachable` | `invalidated`               | SHA-drift report (both SHAs verbatim).                                                 |
+| `session-sha-moved`       | `invalidated`               | SHA-drift report (both SHAs verbatim).                                                 |
+| All files fail to fetch   | `fail`                      | Per-finding rows with `FAIL: file-fetch-failed` and the unreachable paths.             |
+| Normal completion         | `pass` / `warn` / `fail`    | Full `### Verdict` + `### Per-finding annotations` per the output schema.              |
+
+**An empty Critic response is forbidden.** The Reviewer's
+[Step 7 Rung 1](../arm-api-reviewer.agent.md#step-7-mandatory-critic-review--gate--no-findings-leave-this-step-unverified)
+treats zero-content / silent dispatch returns as host-side failures and
+advances to the session-handoff fallback (Rung 2). Therefore a Critic that
+cannot produce a verdict for any reason MUST still produce a verdict
+marker plus a one-paragraph explanation, never a silent return. This
+prevents the "silently approves everything" failure mode where empty
+output is misread as `finding=pass`.
+
 The Critic produces no other HTML markers. In particular, the Critic
 MUST NOT emit a `review-state` marker (that is the Reviewer's
 response-scope marker) or a `posted-by: arm-api-reviewer-agent`

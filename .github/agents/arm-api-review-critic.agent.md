@@ -275,6 +275,23 @@ Input validation is strict and fail-fast:
 If validation fails, return `Finding accuracy = FAIL` with reason
 `missing-inputs` and list exactly which inputs were missing or malformed.
 
+**Non-empty response invariant (load-bearing).** Even when input validation
+fails, the response MUST begin with the standard
+`<!-- critic-verdict: ... -->` marker as its literal first line (see the
+[Output schema](#output-schema) section below), with `finding=fail` and a
+`### Findings that must be corrected (FAIL only)` section enumerating which
+inputs were missing or malformed. **A silent or empty return is forbidden.**
+The Reviewer's [Step 7 Rung 1](./arm-api-reviewer.agent.md#step-7-mandatory-critic-review--gate--no-findings-leave-this-step-unverified)
+classifies empty output as a host-side dispatch failure and advances to the
+session-handoff fallback; therefore a Critic that swallows its verdict
+silently is read as "dispatch broken" rather than "everything passed".
+The same invariant applies to every other early-abort path: `session-sha-unreachable`
+returns `finding=invalidated` with the marker plus the SHA-drift report;
+total file-fetch failure returns `finding=fail` with per-finding
+`FAIL: file-fetch-failed` rows. See the protocol's
+[Non-empty response invariant](./protocols/arm-api-review-critic.protocol.md#non-empty-response-invariant)
+for the canonical statement and the abort-path response table.
+
 ## Hard constraints
 
 - **Read-only behavior, even though tools allow more.** You have shell and
