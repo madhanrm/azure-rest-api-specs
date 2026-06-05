@@ -70,12 +70,6 @@ union OSSKU {
    * Use Windows2022 as the OS for node images.
    */
   Windows2022: "Windows2022",
-
-  /**
-   * Use Windows2025 as the OS for node images.
-   */
-  @added(Versions.v2026_06_01_preview)
-  Windows2025: "Windows2025",
 }
 
 /**

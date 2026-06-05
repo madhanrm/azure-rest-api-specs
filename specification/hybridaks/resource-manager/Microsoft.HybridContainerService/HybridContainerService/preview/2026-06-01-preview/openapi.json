@@ -2654,8 +2654,7 @@
       "enum": [
         "CBLMariner",
         "Windows2019",
-        "Windows2022",
-        "Windows2025"
+        "Windows2022"
       ],
       "x-ms-enum": {
         "name": "OSSKU",
@@ -2675,11 +2674,6 @@
             "name": "Windows2022",
             "value": "Windows2022",
             "description": "Use Windows2022 as the OS for node images."
-          },
-          {
-            "name": "Windows2025",
-            "value": "Windows2025",
-            "description": "Use Windows2025 as the OS for node images."
           }
         ]
       }
